@@ -1,13 +1,15 @@
-import WebApp from '@twa-dev/sdk';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
-// Define the interface for user data (in JavaScript, we just use comments for guidance)
+// โหลด `@twa-dev/sdk` แบบ dynamic เฉพาะเมื่อทำงานใน client-side
+const WebApp = dynamic(() => import('@twa-dev/sdk'), { ssr: false });
+
 function Home() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    // Check if `window` is defined before accessing `WebApp`
-    if (typeof window !== "undefined" && WebApp.initDataUnsafe?.user) {
+    // ตรวจสอบว่า WebApp ถูกโหลดมาแล้วและ initDataUnsafe มีข้อมูล user
+    if (WebApp && WebApp.initDataUnsafe?.user) {
       setUserData(WebApp.initDataUnsafe.user);
     }
   }, []);
